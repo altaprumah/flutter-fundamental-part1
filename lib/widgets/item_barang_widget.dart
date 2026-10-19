@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pml/domain/barang.dart';
 
 // Widget khusus untuk menampilkan satu item barang
@@ -12,8 +13,7 @@ class ItemBarangWidget extends StatelessWidget {
     // Mendeteksi sentuhan/klik pada item
     return GestureDetector(
       onTap: () {
-        // Pindah ke halaman detail sambil membawa data barang yang dipilih
-        Navigator.pushNamed(context, '/detail', arguments: barang);
+        context.go('/detail/${barang.id}');
       },
       // Tampilan visual/desain kotak untuk setiap barang
       child: Container(

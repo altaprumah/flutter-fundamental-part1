@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:pml/data/barang.dart';
 import 'package:pml/domain/barang.dart';
 
 class DetailShopingScreen extends StatelessWidget {
-  const DetailShopingScreen({super.key});
+  final String id;
+  const DetailShopingScreen({super.key, required this.id});
 
   @override
   Widget build(BuildContext context) {
     // Menerima data 'barang' yang dikirim dari halaman sebelumnya melalui argumen navigasi
-    final barang =
-        ModalRoute.of(context)!.settings.arguments as Barang;
+    final barang = list_barang.firstWhere(
+      (barang) => barang.id.toString() == id,
+    );
 
     return Scaffold(
       appBar: AppBar(
