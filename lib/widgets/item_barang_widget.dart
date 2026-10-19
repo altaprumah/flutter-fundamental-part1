@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pml/domain/barang.dart';
 import 'package:pml/widgets/product_image_widget.dart';
 import 'package:pml/widgets/rating_badge_widget.dart';
@@ -33,8 +34,8 @@ class ItemBarangWidget extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(14),
           onTap: () {
-            // Navigasi ke halaman detail dengan membawa objek barang
-            Navigator.pushNamed(context, '/detail', arguments: barang);
+            // Navigasi ke halaman detail menggunakan GoRouter sesuai praktikum 2
+            context.go('/detail/${barang.id}', extra: barang);
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
