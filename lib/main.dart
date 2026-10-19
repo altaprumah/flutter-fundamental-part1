@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pml/pages/shoping_screen.dart';
 import 'package:pml/pages/detail_shoping_screen.dart';
-// Note: Import barang.dart tidak dipakai di main.dart, jadi bisa dihapus jika tidak digunakan
 
 void main() {
-  runApp(const MyApp()); // Menjalankan aplikasi Flutter
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,15 +12,29 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      // Mengatur tema warna utama aplikasi
+      title: 'Aplikasi Belanja Ungu',
+      debugShowCheckedModeBanner: false,
+      // Mengatur tema utama aplikasi dengan warna dominan ungu
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF7B1FA2), // Ungu Primer
+          primary: const Color(0xFF7B1FA2),
+          secondary: const Color(0xFF9C27B0),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF7B1FA2),
+          foregroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: false,
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF7F4FA),
       ),
-      // Mendaftarkan rute (navigasi) halaman
+      // Rute navigasi halaman aplikasi
+      initialRoute: '/',
       routes: {
-        '/': (context) => const ShopingScreen(), // Halaman utama (Home)
-        '/detail': (context) => const DetailShopingScreen(), // Halaman detail
+        '/': (context) => const ShopingScreen(), // Halaman Utama (GridView)
+        '/detail': (context) => const DetailShopingScreen(), // Halaman Detail Produk (Hero)
       },
     );
   }
