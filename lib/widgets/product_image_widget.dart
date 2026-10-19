@@ -57,21 +57,14 @@ class ProductImageWidget extends StatelessWidget {
             ),
           ),
           child: const Center(
-            child: Icon(
-              Icons.eco_rounded,
-              size: 40,
-              color: Color(0xFF7B1FA2),
-            ),
+            child: Icon(Icons.eco_rounded, size: 40, color: Color(0xFF7B1FA2)),
           ),
         );
       },
     );
 
     if (borderRadius != null) {
-      return ClipRRect(
-        borderRadius: borderRadius!,
-        child: imageWidget,
-      );
+      return ClipRRect(borderRadius: borderRadius!, child: imageWidget);
     }
 
     return imageWidget;
