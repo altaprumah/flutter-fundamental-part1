@@ -1,32 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:pml/main.dart';
 
 void main() {
-  testWidgets('Master Plan: state dibagi lewat PlanProvider dan progres update',
+  testWidgets('Master Plan: state dibagi antar dua screen',
       (WidgetTester tester) async {
     await tester.pumpWidget(const MasterPlanApp());
 
-    // Awal: belum ada tugas, footer menampilkan 0 dari 0.
-    expect(find.text('Master Plan Althaf'), findsOneWidget);
-    expect(find.text('0 out of 0 tasks'), findsOneWidget);
+    // Screen 1 kosong.
+    expect(find.text('Master Plans Althaf'), findsOneWidget);
+    expect(find.text('Anda belum memiliki rencana apapun.'), findsOneWidget);
 
-    // Tambah tugas -> footer ikut berubah.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-    expect(find.byType(ListTile), findsOneWidget);
-    expect(find.text('0 out of 1 tasks'), findsOneWidget);
-
-    // Isi teks tugas.
-    await tester.enterText(find.byType(TextFormField), 'Belajar Flutter');
+    // Tambah plan baru.
+    await tester.enterText(find.byType(TextField), 'Belajar Flutter');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
     expect(find.text('Belajar Flutter'), findsOneWidget);
+    expect(find.text('0 out of 0 tasks'), findsOneWidget);
 
-    // Centang tugas -> footer menjadi 1 dari 1.
+    // Buka screen 2, tambah tugas, lalu centang.
+    await tester.tap(find.text('Belajar Flutter'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
+    expect(find.text('0 out of 1 tasks'), findsOneWidget);
     await tester.tap(find.byType(Checkbox));
     await tester.pump();
-    expect(tester.widget<Checkbox>(find.byType(Checkbox)).value, isTrue);
+    expect(find.text('1 out of 1 tasks'), findsOneWidget);
+
+    // Kembali ke screen 1: progres ikut ter-update (state dibagi).
+    await tester.pageBack();
+    await tester.pumpAndSettle();
     expect(find.text('1 out of 1 tasks'), findsOneWidget);
   });
 }

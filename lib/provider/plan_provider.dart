@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/data_layer.dart';
 
-/// InheritedNotifier: menyimpan ValueNotifier<Plan> di atas widget tree dan
-/// otomatis membangun ulang widget turunan yang bergantung padanya
-/// setiap kali nilai notifier berubah.
-class PlanProvider extends InheritedNotifier<ValueNotifier<Plan>> {
+/// InheritedNotifier yang kini menyimpan DAFTAR Plan (List<Plan>),
+/// sehingga bisa dipakai bersama oleh banyak screen.
+class PlanProvider extends InheritedNotifier<ValueNotifier<List<Plan>>> {
   const PlanProvider({
     super.key,
     required Widget child,
-    required ValueNotifier<Plan> notifier,
+    required ValueNotifier<List<Plan>> notifier,
   }) : super(child: child, notifier: notifier);
 
-  /// Mengambil notifier terdekat dari widget tree.
-  static ValueNotifier<Plan> of(BuildContext context) {
+  static ValueNotifier<List<Plan>> of(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<PlanProvider>()!
         .notifier!;
