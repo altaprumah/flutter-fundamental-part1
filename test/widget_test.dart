@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:pml/main.dart';
 
 void main() {
-  testWidgets('Master Plan: state dibagi antar dua screen',
+  testWidgets('ToDo: tambah, centang, dan hapus tugas',
       (WidgetTester tester) async {
-    await tester.pumpWidget(const MasterPlanApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
 
-    // Screen 1 kosong.
-    expect(find.text('Master Plans Althaf'), findsOneWidget);
-    expect(find.text('Anda belum memiliki rencana apapun.'), findsOneWidget);
+    // Awal: belum ada tugas.
+    expect(find.text('ToDo Riverpod'), findsOneWidget);
+    expect(find.text('Belum ada tugas'), findsOneWidget);
 
-    // Tambah plan baru.
-    await tester.enterText(find.byType(TextField), 'Belajar Flutter');
-    await tester.testTextInput.receiveAction(TextInputAction.done);
-    await tester.pump();
-    expect(find.text('Belajar Flutter'), findsOneWidget);
-    expect(find.text('0 out of 0 tasks'), findsOneWidget);
-
-    // Buka screen 2, tambah tugas, lalu centang.
-    await tester.tap(find.text('Belajar Flutter'));
-    await tester.pumpAndSettle();
+    // Tambah tugas lewat dialog.
     await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-    expect(find.text('0 out of 1 tasks'), findsOneWidget);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Belajar Riverpod');
+    await tester.tap(find.text('Tambah'));
+    await tester.pumpAndSettle();
+    expect(find.text('Belajar Riverpod'), findsOneWidget);
+    expect(find.text('Belum ada tugas'), findsNothing);
+
+    // Centang tugas -> teks tercoret.
     await tester.tap(find.byType(Checkbox));
     await tester.pump();
-    expect(find.text('1 out of 1 tasks'), findsOneWidget);
+    expect(tester.widget<Checkbox>(find.byType(Checkbox)).value, isTrue);
+    expect(
+      tester.widget<Text>(find.text('Belajar Riverpod')).style?.decoration,
+      TextDecoration.lineThrough,
+    );
 
-    // Kembali ke screen 1: progres ikut ter-update (state dibagi).
-    await tester.pageBack();
-    await tester.pumpAndSettle();
-    expect(find.text('1 out of 1 tasks'), findsOneWidget);
+    // Hapus tugas -> kembali kosong.
+    await tester.tap(find.byIcon(Icons.delete));
+    await tester.pump();
+    expect(find.text('Belum ada tugas'), findsOneWidget);
   });
 }
