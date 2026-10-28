@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/todo_provider.dart';
+import 'product_page.dart';
 
 class TodoPage extends ConsumerWidget {
   const TodoPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ref.watch di dalam build: halaman otomatis ter-rebuild saat daftar berubah.
     final todos = ref.watch(todoListProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('ToDo Riverpod')),
+      appBar: AppBar(
+        title: const Text('ToDo Riverpod'),
+        actions: [
+          // Tambahan Praktikum 5: buka halaman Produk (AsyncValue).
+          IconButton(
+            icon: const Icon(Icons.inventory_2),
+            tooltip: 'Produk',
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const ProductPage()),
+            ),
+          ),
+        ],
+      ),
       body: todos.isEmpty
           ? const Center(child: Text('Belum ada tugas'))
           : ListView.builder(
@@ -19,8 +31,6 @@ class TodoPage extends ConsumerWidget {
               itemBuilder: (context, index) => ListTile(
                 leading: Checkbox(
                   value: todos[index].done,
-                  // ref.read(...notifier) di dalam callback: hanya memanggil
-                  // method, tanpa berlangganan (subscribe) ke perubahan.
                   onChanged: (_) =>
                       ref.read(todoListProvider.notifier).toggle(index),
                 ),
