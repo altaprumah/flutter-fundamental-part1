@@ -1,11 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:pml/basic_widgets/image_widget.dart';
-import 'package:pml/basic_widgets/text_input.dart';
-import 'package:pml/basic_widgets/text_widget.dart';
+import './model/pizza.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -13,97 +10,82 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'JSON - Farrel',
+      theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  DateTime? _dateTime = DateTime.now();
+  List<Pizza> myPizzas = [];
 
-  //void _incrementCounter() {
-  //  setState(() {
-  //    _counter++;
-  //  });
-  //}
+  @override
+  void initState() {
+    super.initState();
+    readJsonFile().then((value) {
+      setState(() {
+        myPizzas = value;
+      });
+    });
+  }
 
-  void tampilkanDialog(BuildContext context) {
-    Widget okButton = TextButton(
-      child: const Text("OK"),
-      onPressed: () {
-        Navigator.pop(context);
-      },
-    );
+  Future<List<Pizza>> readJsonFile() async {
+    try {
+      String myString = await DefaultAssetBundle.of(context)
+          .loadString('assets/pizzalist.json');
+      List pizzaMapList = jsonDecode(myString);
+      List<Pizza> myPizzas = [];
+      for (var pizza in pizzaMapList) {
+        Pizza myPizza = Pizza.fromJson(pizza);
+        myPizzas.add(myPizza);
+      }
 
-    AlertDialog alert = AlertDialog(
-      title: const Text("Dialog"),
-      content: const Text("Ini adalah dialog"),
-      actions: [
-        okButton,
-      ],
-    );
+      String json = convertToJSON(myPizzas);
+      print(json);
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
+      return myPizzas;
+    } catch (e) {
+      print('Error: $e');
+      return [];
+    }
+  }
+
+  String convertToJSON(List<Pizza> pizzas) {
+    return jsonEncode(pizzas.map((pizza) => jsonEncode(pizza)).toList());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(_dateTime.toString()),
-            MyImageWidget(),
-            MyWidget(),
-            InputTextWidget(),
-            ElevatedButton(
-              child: const Text("ubah tanggal"),
-              onPressed: () async {
-                final DateTime? tanggal = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2015, 8),
-                  lastDate: DateTime(2101),
-                );
-
-                if (tanggal != null && tanggal != _dateTime) {
-                  setState(() {
-                    _dateTime = tanggal;
-                  });
-                }
-              },
+      appBar: AppBar(title: const Text('JSON - Farrel')),
+      body: ListView.builder(
+        itemCount: myPizzas.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.asset(
+                myPizzas[index].imageUrl,
+                width: 55,
+                height: 55,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.local_pizza, size: 40),
+              ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => tampilkanDialog(context),
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+            title: Text(myPizzas[index].pizzaName),
+            subtitle: Text(myPizzas[index].description),
+            trailing: Text('\$${myPizzas[index].price.toStringAsFixed(2)}'),
+          );
+        },
       ),
     );
   }

@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "pizzaName": "Margherita",
+    "description": "Pizza with tomato sauce, fresh mozzarella, and basil leaves",
+    "price": 8.75,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 2,
+    "pizzaName": "Pepperoni",
+    "description": "Classic pizza topped with spicy beef pepperoni and melted mozzarella",
+    "price": 10.50,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 3,
+    "pizzaName": "BBQ Chicken",
+    "description": "Grilled chicken breast, smoky barbecue sauce, red onions, and cilantro",
+    "price": 11.25,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 4,
+    "pizzaName": "Hawaiian",
+    "description": "Sweet pineapple chunks, smoked turkey ham, and mozzarella cheese",
+    "price": 9.90,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 5,
+    "pizzaName": "Meat Lovers",
+    "description": "Loaded with pepperoni, Italian sausage, minced beef, and smoked ham",
+    "price": 12.75,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 6,
+    "pizzaName": "Veggie Supreme",
+    "description": "Bell peppers, mushrooms, black olives, sweet corn, and red onions",
+    "price": 9.50,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 7,
+    "pizzaName": "Four Cheese",
+    "description": "Rich blend of mozzarella, cheddar, parmesan, and gorgonzola cheeses",
+    "price": 11.00,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 8,
+    "pizzaName": "Tuna Melt",
+    "description": "Flaked tuna, sweet corn, mayonnaise drizzle, onions, and mozzarella",
+    "price": 10.25,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 9,
+    "pizzaName": "Mushroom Truffle",
+    "description": "Sautéed button and shiitake mushrooms with white truffle oil and parmesan",
+    "price": 13.00,
+    "imageUrl": "assets/images/pizza.jpg"
+  },
+  {
+    "id": 10,
+    "pizzaName": "Spicy Beef",
+    "description": "Seasoned ground beef, jalapeños, chili flakes, and melted cheddar",
+    "price": 11.50,
+    "imageUrl": "assets/images/pizza.jpg"
+  }
+]
