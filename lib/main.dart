@@ -1,6 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() => runApp(const MyApp());
 
@@ -10,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'File System - Farrel',
+      title: 'Secure Storage - Farrel',
       theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
       home: const MyHomePage(),
     );
@@ -25,72 +24,95 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String documentsPath = '';
-  String tempPath = '';
-  late File myFile;
-  String fileText = '';
+  final storage = const FlutterSecureStorage();
+  final myKey = 'myPass';
+  final pwdController = TextEditingController();
+  String myPass = '';
+  bool _isObscureInput = true;
+  bool _isShowResult = false;
+
+  Future<void> writeToSecureStorage() async {
+    await storage.write(key: myKey, value: pwdController.text);
+  }
+
+  Future<String> readFromSecureStorage() async {
+    String secret = await storage.read(key: myKey) ?? '';
+    return secret;
+  }
 
   @override
-  void initState() {
-    super.initState();
-    getPaths().then((_) async {
-      myFile = File('$documentsPath/pizzas.txt');
-      await writeFile();
-      readFile();
-    });
-  }
-
-  Future getPaths() async {
-    final docDir = await getApplicationDocumentsDirectory();
-    final tempDir = await getTemporaryDirectory();
-    setState(() {
-      documentsPath = docDir.path;
-      tempPath = tempDir.path;
-    });
-  }
-
-  Future<bool> writeFile() async {
-    try {
-      await myFile.writeAsString('Margherita, Capricciosa, Napoli');
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  Future<bool> readFile() async {
-    try {
-      String fileContent = await myFile.readAsString();
-      setState(() {
-        fileText = fileContent;
-      });
-      return true;
-    } catch (e) {
-      return false;
-    }
+  void dispose() {
+    pwdController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('File System - Farrel')),
+      appBar: AppBar(title: const Text('Secure Storage - Farrel')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Doc path: $documentsPath'),
-            Text('Temp path: $tempPath'),
+            TextField(
+              controller: pwdController,
+              obscureText: _isObscureInput,
+              decoration: InputDecoration(
+                labelText: 'Masukkan password / data rahasia',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isObscureInput ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscureInput = !_isObscureInput;
+                    });
+                  },
+                ),
+              ),
+            ),
             ElevatedButton(
               onPressed: () {
-                readFile();
+                writeToSecureStorage();
               },
-              child: const Text('Read File'),
+              child: const Text('Save Value'),
             ),
-            Text(
-              'Isi File: $fileText',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ElevatedButton(
+              onPressed: () {
+                readFromSecureStorage().then((value) {
+                  setState(() {
+                    myPass = value;
+                  });
+                });
+              },
+              child: const Text('Read Value'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  myPass.isEmpty
+                      ? ''
+                      : (_isShowResult ? myPass : '•' * myPass.length),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (myPass.isNotEmpty)
+                  IconButton(
+                    icon: Icon(
+                      _isShowResult ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isShowResult = !_isShowResult;
+                      });
+                    },
+                  ),
+              ],
             ),
           ],
         ),
