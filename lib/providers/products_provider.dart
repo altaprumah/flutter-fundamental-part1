@@ -4,11 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// mewakili tiga kondisi: loading, error, dan data (success).
 class ProductsNotifier extends AsyncNotifier<List<String>> {
   @override
-  Future<List<String>> build() async {
-    // Simulasi pemanggilan jaringan selama 2 detik.
-    await Future.delayed(const Duration(seconds: 2));
-    return ['Keyboard', 'Mouse', 'Monitor'];
-  }
+Future<List<String>> build() async {
+  await Future.delayed(const Duration(seconds: 2));
+  return ['Keyboard', 'Mouse', 'Monitor'];
+}
 
   /// Memuat ulang data. State dipindah ke loading dulu, lalu hasilnya
   /// dibungkus AsyncValue.guard supaya exception otomatis menjadi AsyncError.
