@@ -1,0 +1,13 @@
+[
+  {
+    "id": "101",
+    "pizzaName": "Pepperoni Broken",
+    "price": "12.50"
+  },
+  {
+    "id": null,
+    "description": "Field nama hilang, harga string invalid, gambar null",
+    "price": "bukan_angka",
+    "imageUrl": null
+  }
+]
